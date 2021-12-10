@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CollegeHelper</string>
+    <string name="title_attendance">Attendance</string>
+    <string name="title_assignment">Assignment</string>
+    <string name="title_notes">Notes</string>
+    <string name="title_setting">Setting</string>
+</resources>

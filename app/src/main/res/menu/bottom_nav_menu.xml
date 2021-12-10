@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_attendance"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="@string/title_attendance" />
+
+    <item
+        android:id="@+id/navigation_assignment"
+        android:icon="@drawable/ic_baseline_assignment_24"
+        android:title="@string/title_assignment" />
+
+    <item
+        android:id="@+id/navigation_notes"
+        android:icon="@drawable/ic_baseline_note_24"
+        android:title="@string/title_notes" />
+
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/title_setting" />
+
+</menu>
