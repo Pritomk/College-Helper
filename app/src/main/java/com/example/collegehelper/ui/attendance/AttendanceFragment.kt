@@ -30,10 +30,6 @@ class AttendanceFragment : Fragment() {
         _binding = FragmentAttendanceBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        attendanceViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
         return root
     }
 

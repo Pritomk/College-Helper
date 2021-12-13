@@ -3,6 +3,7 @@ package com.example.collegehelper
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -29,6 +30,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_attendance, R.id.navigation_assignment, R.id.navigation_notes, R.id.navigation_setting
             )
         )
+
+        //Setup toolbar
+        val toolBar : Toolbar = binding.demoToolbar
+        setSupportActionBar(toolBar)
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
