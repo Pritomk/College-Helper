@@ -25,7 +25,7 @@ class AttendanceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         attendanceViewModel =
-            ViewModelProvider(this).get(AttendanceViewModel::class.java)
+            ViewModelProvider(this, AttendanceViewModelFactory(requireActivity().application)).get(AttendanceViewModel::class.java)
 
         _binding = FragmentAttendanceBinding.inflate(inflater, container, false)
         val root: View = binding.root
