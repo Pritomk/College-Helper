@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.collegehelper"
-        minSdk 21
+        minSdk 24
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -67,5 +67,8 @@ dependencies {
     // UI
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
     implementation "com.google.android.material:material:$rootProject.materialVersion"
+
+    //Swipe card dependency
+    implementation "com.lorentzos.swipecards:library:1.0.9@aar"
 
 }
