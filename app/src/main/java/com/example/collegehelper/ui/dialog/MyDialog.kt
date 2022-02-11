@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import androidx.fragment.app.DialogFragment
+import com.example.collegehelper.databinding.FragmentDeleteDialogBinding
 import com.example.collegehelper.databinding.FragmentDialogBinding
 import com.example.collegehelper.room.classItem.ClassItem
 
@@ -18,23 +19,32 @@ class MyDialog(private val listener: AddButtonClicked) : DialogFragment() {
 
     val CLASS_ADD_DIALOG = "addClass"
     val CLASS_UPDATE_DIALOG = "updateClass"
+    val CLASS_DELETE_DIALOG = "deleteClass"
     val STUDENT_ADD_DIALOG = "addStudent"
     val STUDENT_UPDATE_DIALOG = "updateStudent"
     private lateinit var dialogBinding: FragmentDialogBinding
+    private lateinit var deleteDialogBinding: FragmentDeleteDialogBinding
 
 
     @NonNull
     override fun onCreateDialog(@Nullable savedInstanceState: Bundle?): Dialog {
         var dialog: Dialog? = null
         dialogBinding = FragmentDialogBinding.inflate(layoutInflater)
+        deleteDialogBinding = FragmentDeleteDialogBinding.inflate(layoutInflater)
 
-        if (tag == CLASS_ADD_DIALOG) {
-            dialog = getAddClassDialog()
-        }
         when(tag) {
             CLASS_ADD_DIALOG -> {
                 dialog = getAddClassDialog()
             }
+
+            CLASS_UPDATE_DIALOG -> {
+                dialog = getUpdateClassDialog()
+            }
+
+            CLASS_DELETE_DIALOG -> {
+                dialog = getDeleteClassDialog()
+            }
+
             STUDENT_ADD_DIALOG -> {
                 dialog = getAddStudentDialog()
             }
@@ -114,9 +124,44 @@ class MyDialog(private val listener: AddButtonClicked) : DialogFragment() {
         }
         return builder.create()
     }
+
+    private fun getUpdateClassDialog(): Dialog? {
+        val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(activity)
+        builder.setView(dialogBinding.root)
+        val title: TextView = dialogBinding.titleDialog
+        title.text = "Add new Class"
+        val classEdit: EditText = dialogBinding.edt01
+        val subjectEdit: EditText = dialogBinding.edt02
+        classEdit.hint = "Enter Class Name"
+        subjectEdit.hint = "Enter Subject Name"
+        val addClassBtn: Button = dialogBinding.addBtn
+        val cancelBtn: Button = dialogBinding.cancelBtn
+        cancelBtn.setOnClickListener { v -> dismiss() }
+        addClassBtn.setOnClickListener { v ->
+            val className = classEdit.text.toString()
+            val subName = subjectEdit.text.toString()
+            listener.onUpdateClicked(className, subName)
+            dismiss()
+        }
+        return builder.create()
+    }
+
+    private fun getDeleteClassDialog(): Dialog? {
+        val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(activity)
+        builder.setView(deleteDialogBinding.root)
+        val deleteBtn: Button = deleteDialogBinding.deleteBtn
+        val cancelBtn: Button = deleteDialogBinding.cancelBtn
+        cancelBtn.setOnClickListener { v -> dismiss() }
+        deleteBtn.setOnClickListener { v ->
+            listener.onDeleteClicked()
+            dismiss()
+        }
+        return builder.create()
+    }
 }
 
 interface AddButtonClicked {
     fun onAddClicked(text01 : String, text02 : String)
     fun onUpdateClicked(text01: String,text02: String)
+    fun onDeleteClicked()
 }
