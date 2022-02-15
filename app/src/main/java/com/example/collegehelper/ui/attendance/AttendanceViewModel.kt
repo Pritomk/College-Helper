@@ -48,9 +48,16 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun updateClassOnline(className: String, subName: String) {
+    fun updateClassOnline(className: String, subName: String, mongoId: String) {
         GlobalScope.launch {
-            classDao.updateClass(className, subName)
+            classDao.updateClass(className, subName,mongoId)
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun deleteClassOnline(mongoId: String) {
+        GlobalScope.launch {
+            classDao.deleteClassItem(mongoId)
         }
     }
 }

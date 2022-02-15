@@ -88,9 +88,6 @@ class AttendanceFragment : Fragment(), AddButtonClicked, ClassItemClicked {
     }
 
     override fun onAddClicked(text01: String, text02: String) {
-        attendanceViewModel.insertClassItem(ClassItem(0,text01, text02))
-
-
         //Insert data to mongodb
         attendanceViewModel.insertClassOnline(text01,text02)
     }
@@ -98,18 +95,23 @@ class AttendanceFragment : Fragment(), AddButtonClicked, ClassItemClicked {
 
     override fun onUpdateClicked(text01: String, text02: String) {
 
-        //Update in local database
         updateClassItem.className = text01
         updateClassItem.subjectName = text02
+
+        //Update data in local database
         attendanceViewModel.updateClassItem(updateClassItem)
 
         //Update in online database
+        attendanceViewModel.updateClassOnline(text01, text02, updateClassItem.mongoId)
 
     }
 
     override fun onDeleteClicked() {
         //Delete in local database
         attendanceViewModel.deleteClassItem(deleteClassItem)
+
+        //Delete in online database
+        attendanceViewModel.deleteClassOnline(deleteClassItem.mongoId)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

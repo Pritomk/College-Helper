@@ -8,5 +8,6 @@ data class ClassItem(
     @PrimaryKey(autoGenerate = true)
     var cid : Long = 0L,
     var className : String = "",
-    var subjectName : String = ""
+    var subjectName : String = "",
+    var mongoId: String = ""
 )
