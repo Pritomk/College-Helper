@@ -141,6 +141,8 @@ class AttendanceFragment : Fragment(), AddButtonClicked, ClassItemClicked {
         intent.putExtra("className",item.className)
         intent.putExtra("subjectName",item.subjectName)
         intent.putExtra("cid",item.cid)
+        Log.d(TAG, "${item.mongoId}")
+        intent.putExtra("classMongoId", item.mongoId)
         startActivity(intent)
     }
 }

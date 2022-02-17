@@ -30,6 +30,7 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
     private lateinit var calender: MyCalender
     private lateinit var className: String
     private lateinit var subName: String
+    private lateinit var classMongoId: String
     private var cid = 0L
     private lateinit var recyclerView: RecyclerView
     private lateinit var binding: ActivityStudentBinding
@@ -42,6 +43,8 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
     private lateinit var adapter: StudentAdapter
     private lateinit var studentList: List<Student>
     private var position = -1
+    private lateinit var deletedStudent: Student
+    private lateinit var updatedStudent: Student
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +56,8 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
         className = intent.getStringExtra("className").toString()
         subName = intent.getStringExtra("subName").toString()
         cid = intent.getLongExtra("cid",0L)
+        classMongoId = intent.getStringExtra("classMongoId").toString()
+        Log.d(TAG, "$classMongoId")
         dialog = MyDialog(this)
 
         toolBar = findViewById(R.id.toolbar)
@@ -72,15 +77,15 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        studentActivityViewModel.allStudentItems.observe(this,{ studentItems->
+        studentActivityViewModel.allStudentItems.observe(this) { studentItems ->
             studentList = studentItems
             val statusList = ArrayList<Status>()
-            loadStatusList(studentItems,statusList)
+            loadStatusList(studentItems, statusList)
 
-            adapter.updateList(studentItems as ArrayList<Student>,statusList)
+            adapter.updateList(studentItems as ArrayList<Student>, statusList)
 
             setToolBar(statusList)
-        })
+        }
     }
 
     private fun loadStatusList(studentItems: List<Student>, statusList: ArrayList<Status>) {
@@ -169,7 +174,7 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
         when (item.itemId) {
             0 -> {
                 position = item.groupId
-                showUpdateDialog()
+                showUpdateDialog(item.groupId)
             }
             1 -> {
                 deleteStudent(item.groupId)
@@ -179,21 +184,45 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
         return super.onContextItemSelected(item)
     }
 
-    private fun showUpdateDialog() {
+    private fun showUpdateDialog(groupId: Int) {
+        updatedStudent = studentList[groupId]
         dialog.show(supportFragmentManager,dialog.STUDENT_UPDATE_DIALOG)
     }
 
+    //Delete student data in database
     private fun deleteStudent(groupId: Int) {
-        studentActivityViewModel.deleteStudent(studentList[groupId])
+        deletedStudent = studentList[groupId]
+
+        //Delete student in local database
+        studentActivityViewModel.deleteStudent(deletedStudent)
+
+        //Delete student in online database
+        studentActivityViewModel.deleteStudentOnline(deletedStudent)
     }
 
+    // Add student in database
     override fun onAddClicked(text01: String, text02: String) {
-        studentActivityViewModel.insertStudent(Student(0,cid,text01,text02.toInt()))
+
+        val student = Student(0,cid,text01,text02.toInt())
+
+        // Insert student in local database
+        studentActivityViewModel.insertStudentOnline(student,classMongoId)
     }
 
+    //Update student data in database
     override fun onUpdateClicked(text01: String, text02: String) {
         Log.d(TAG,"$position  $studentList")
-        studentActivityViewModel.updateStudent(Student(studentList[position].sid,cid,text01,text02.toInt()))
+        val student = Student(studentList[position].sid,cid,text01,text02.toInt(),updatedStudent.studentMongoId)
+
+        //Update in local database
+        studentActivityViewModel.updateStudent(student)
+
+        //Update in online database
+        studentActivityViewModel.updateStudentOnline(student)
+    }
+
+    override fun onDeleteClicked() {
+
     }
 
 

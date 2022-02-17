@@ -10,7 +10,9 @@ import com.example.collegehelper.room.status.Status
 import com.example.collegehelper.room.status.StatusDatabase
 import com.example.collegehelper.room.student.Student
 import com.example.collegehelper.room.student.StudentDatabase
+import com.example.collegehelper.volleyDao.StudentDao
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class StudentActivityViewModel(application: Application) : AndroidViewModel(application){
@@ -19,6 +21,7 @@ class StudentActivityViewModel(application: Application) : AndroidViewModel(appl
     private val statusRepository : StatusRepository
     val allStudentItems : LiveData<List<Student>>
     val allStatusItem : LiveData<List<Status>>
+    private var onlineStudentDao: StudentDao
 
     init {
         val studentDao = StudentDatabase.getDatabase(application).getStudentDao()
@@ -28,8 +31,11 @@ class StudentActivityViewModel(application: Application) : AndroidViewModel(appl
         val statusDao = StatusDatabase.getDatabase(application).getStatusDao()
         statusRepository = StatusRepository(statusDao)
         allStatusItem = statusRepository.allStatusItem
+
+        onlineStudentDao = StudentDao(application)
     }
 
+    //Methods for inserting student in local database
     fun insertStudent(student: Student) = viewModelScope.launch(Dispatchers.IO) {
         studentRepository.insert(student)
     }
@@ -46,6 +52,29 @@ class StudentActivityViewModel(application: Application) : AndroidViewModel(appl
         return studentRepository.getClassStudent(cid)
     }
 
+
+    //    Methods for inserting student in online database
+    fun insertStudentOnline(student: Student, classMongoId: String) {
+        GlobalScope.launch {
+            onlineStudentDao.insertStudentOnline(student,classMongoId)
+        }
+    }
+
+    fun updateStudentOnline(student: Student) {
+        GlobalScope.launch {
+            onlineStudentDao.updateStudentOnline(student)
+        }
+    }
+
+    fun deleteStudentOnline(student: Student) {
+        GlobalScope.launch {
+            onlineStudentDao.deleteStudent(student)
+        }
+    }
+
+
+
+    // status methods for local database
     fun insertStatus(status: Status) = viewModelScope.launch(Dispatchers.IO) {
         statusRepository.insert(status)
     }

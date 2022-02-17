@@ -31,6 +31,7 @@ class AttendanceActivity : AppCompatActivity(), OnCalenderClickListener {
     private lateinit var attendanceAdapter: AttendanceAdapter
     private var cid = 0L
     private var className = ""
+    private lateinit var classMongoId: String
     private var subName = ""
     private lateinit var toolBar: Toolbar
     private lateinit var binding : ActivityAttendanceBinding
@@ -51,6 +52,7 @@ class AttendanceActivity : AppCompatActivity(), OnCalenderClickListener {
         cid = intent.getLongExtra("cid",0L)
         className = intent.getStringExtra("className").toString()
         subName = intent.getStringExtra("subjectName").toString()
+        classMongoId = intent.getStringExtra("classMongoId").toString()
 
         toolBar = findViewById(R.id.toolbar)
         toolBar.inflateMenu(R.menu.attendance_item)
@@ -64,11 +66,11 @@ class AttendanceActivity : AppCompatActivity(), OnCalenderClickListener {
     }
 
     private fun loadData() {
-        studentActivityViewModel.allStudentItems.observe(this,{studentItems->
+        studentActivityViewModel.allStudentItems.observe(this) { studentItems ->
             attendanceAdapter = AttendanceAdapter(this, studentItems as ArrayList<Student>)
 
             val statusList = ArrayList<Status>()
-            loadStatusList(studentItems,statusList)
+            loadStatusList(studentItems, statusList)
 
             var pos = 0
 
@@ -97,8 +99,7 @@ class AttendanceActivity : AppCompatActivity(), OnCalenderClickListener {
 
             setToolBar(statusList)
 
-        })
-
+        }
 
 
     }
@@ -142,6 +143,7 @@ class AttendanceActivity : AppCompatActivity(), OnCalenderClickListener {
         intent.putExtra("className", className)
         intent.putExtra("subjectName", subName)
         intent.putExtra("cid", cid)
+        intent.putExtra("classMongoId", classMongoId)
 
         startActivity(intent)
     }
