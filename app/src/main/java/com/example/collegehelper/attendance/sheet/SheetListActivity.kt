@@ -46,7 +46,7 @@ class SheetListActivity : AppCompatActivity(), OnCalenderClickListener {
     }
 
     private fun loadStatusList() {
-        studentActivityViewModel.getAllStatus(cid).observe(this, { statusList ->
+        studentActivityViewModel.getAllStatus(cid).observe(this) { statusList ->
             val dates: ArrayList<String> = ArrayList()
             loadMonths(dates, statusList)
 
@@ -56,10 +56,10 @@ class SheetListActivity : AppCompatActivity(), OnCalenderClickListener {
             sheetList.onItemClickListener =
                 AdapterView.OnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
                     openSheetActivity(
-                        position,statusList
+                        position, statusList
                     )
                 }
-        })
+        }
     }
 
     private fun openSheetActivity(position: Int, statusList: List<Status>) {

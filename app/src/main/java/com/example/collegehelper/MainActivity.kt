@@ -1,5 +1,6 @@
 package com.example.collegehelper
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.collegehelper.authentication.LoginActivity
 import com.example.collegehelper.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -37,5 +39,15 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val collegePref = getSharedPreferences("user_college_helper", MODE_PRIVATE)
+        if (!collegePref.contains("token")) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
     }
 }

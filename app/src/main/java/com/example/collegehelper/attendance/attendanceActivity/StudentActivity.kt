@@ -118,7 +118,6 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
                 status = "A"
             studentActivityViewModel.insertStatus(Status(0,item.sid,item.cid,status,calender.getDate()!!))
         }
-
     }
 
     private fun onMenuItemClick(menuItem: MenuItem?) : Boolean {

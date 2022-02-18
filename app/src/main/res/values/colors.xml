@@ -12,5 +12,7 @@
     <color name="yellow">#F8F426</color>
     <color name="present">#3335C500</color>
     <color name="absent">#33FF0000</color>
+    <color name="shade_black">#C2545151</color>
+    <color name="cream_red">#C2E72B2B</color>
 
 </resources>

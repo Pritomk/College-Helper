@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "642837719770",
+    "project_id": "collegehelper-8240a",
+    "storage_bucket": "collegehelper-8240a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642837719770:android:5a46ced7c7ae73c00313e3",
+        "android_client_info": {
+          "package_name": "com.example.collegehelper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642837719770-ab5uugjvic09il5nh9347nl48mlddhqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV-89WFXnZ6YvWMCLxHNG5jLrfwTb_3TY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642837719770-ab5uugjvic09il5nh9347nl48mlddhqf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

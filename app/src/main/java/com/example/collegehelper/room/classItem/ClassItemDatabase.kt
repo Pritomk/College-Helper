@@ -5,8 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.collegehelper.daos.ClassItemDao
+import com.example.collegehelper.room.status.Status
 
-@Database(entities = [ClassItem::class], version = 1, exportSchema = false)
+@Database(entities = [ClassItem::class], version = 1)
 abstract class ClassItemDatabase : RoomDatabase() {
 
     abstract fun getClassItemDao() : ClassItemDao
