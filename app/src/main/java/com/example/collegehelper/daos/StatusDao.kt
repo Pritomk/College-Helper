@@ -21,4 +21,7 @@ interface StatusDao {
 
     @Query("Select status from status_table where cid = :cid and sid = :sid and dateKey = :dateKey")
     fun getStatus(cid: Long, sid: Long, dateKey: String) : LiveData<String>
+
+    @Query("Select * from status_table where cid = :cid and dateKey = :dateKey")
+    fun getDateStatus(cid: Long, dateKey: String) : LiveData<List<Status>>
 }

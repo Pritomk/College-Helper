@@ -11,5 +11,6 @@ data class Status(
     var sid: Long = 0L,
     var cid: Long = 0L,
     var status: String = "",
-    var dateKey: String = ""
+    var dateKey: String = "",
+    var statusMongoId: String = ""
 )

@@ -30,10 +30,6 @@ class AssignmentFragment : Fragment() {
         _binding = FragmentAssignmentBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        assignmentViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
         return root
     }
 

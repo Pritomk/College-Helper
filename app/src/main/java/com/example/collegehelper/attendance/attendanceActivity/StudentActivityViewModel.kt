@@ -10,6 +10,7 @@ import com.example.collegehelper.room.status.Status
 import com.example.collegehelper.room.status.StatusDatabase
 import com.example.collegehelper.room.student.Student
 import com.example.collegehelper.room.student.StudentDatabase
+import com.example.collegehelper.volleyDao.StatusDao
 import com.example.collegehelper.volleyDao.StudentDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -22,6 +23,7 @@ class StudentActivityViewModel(application: Application) : AndroidViewModel(appl
     val allStudentItems : LiveData<List<Student>>
     val allStatusItem : LiveData<List<Status>>
     private var onlineStudentDao: StudentDao
+    private var onlineStatusDao: StatusDao
 
     init {
         val studentDao = StudentDatabase.getDatabase(application).getStudentDao()
@@ -33,6 +35,7 @@ class StudentActivityViewModel(application: Application) : AndroidViewModel(appl
         allStatusItem = statusRepository.allStatusItem
 
         onlineStudentDao = StudentDao(application)
+        onlineStatusDao = StatusDao(application)
     }
 
     //Methods for inserting student in local database
@@ -89,5 +92,23 @@ class StudentActivityViewModel(application: Application) : AndroidViewModel(appl
 
     fun getStatus(cid: Long, sid: Long, dateKey: String) : LiveData<String> {
         return statusRepository.getStatus(cid, sid, dateKey)
+    }
+
+    fun getDateStatus(cid: Long, dateKey: String) : LiveData<List<Status>> {
+        return statusRepository.getDateStatus(cid, dateKey)
+    }
+
+    // Online status methods
+
+    fun insertStatusOnline(status: Status, classMongoId: String, studentMongoId: String) {
+        GlobalScope.launch {
+            onlineStatusDao.insertStatusOnline(status, classMongoId, studentMongoId)
+        }
+    }
+
+    fun updateStatusOnline(status: Status) {
+        GlobalScope.launch {
+            onlineStatusDao.updateStatusOnline(status)
+        }
     }
 }

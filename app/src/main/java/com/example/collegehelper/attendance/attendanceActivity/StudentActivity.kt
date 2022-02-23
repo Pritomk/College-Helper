@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -45,6 +47,8 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
     private var position = -1
     private lateinit var deletedStudent: Student
     private lateinit var updatedStudent: Student
+    private lateinit var saveIcon: ImageButton
+    private lateinit var statusList: ArrayList<Status>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +59,7 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
         calender = MyCalender(this)
         className = intent.getStringExtra("className").toString()
         subName = intent.getStringExtra("subName").toString()
-        cid = intent.getLongExtra("cid",0L)
+        cid = intent.getLongExtra("cid", 0L)
         classMongoId = intent.getStringExtra("classMongoId").toString()
         Log.d(TAG, "$classMongoId")
         dialog = MyDialog(this)
@@ -65,12 +69,54 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
 
         recyclerView = binding.studentRecycler
 
-        studentActivityViewModel = ViewModelProvider(this,
-            StudentActivityViewModelFactory(application))[StudentActivityViewModel::class.java]
+        studentActivityViewModel = ViewModelProvider(
+            this,
+            StudentActivityViewModelFactory(application)
+        )[StudentActivityViewModel::class.java]
 
 
         loadData()
+
+        changeSaveIcon()
+//        saveIcon.setOnClickListener { saveButtonListener }
     }
+
+    private fun changeSaveIcon() {
+        calender.getDate()?.let {
+            studentActivityViewModel.getDateStatus(cid, it).observe(this) { list ->
+                val icon = toolBar.findViewById<ImageView>(R.id.iconSave)
+                Log.d(TAG, "Executed")
+                if (list.isNotEmpty()) {
+                    icon.setImageResource(R.drawable.ic_update_attendance)
+                    saveIcon.setOnClickListener {
+                        studentActivityViewModel.getAllStatus(cid).observe(this) { list ->
+                            for (item in list) {
+                                studentActivityViewModel.updateStatusOnline(item)
+                            }
+                        }
+                    }
+                } else {
+                    icon.setImageResource(R.drawable.save_image)
+                    saveIcon.setOnClickListener {
+                        saveStatus(statusList)
+                    }
+                }
+            }
+        }
+    }
+
+    private val saveButtonListener: View.OnClickListener = View.OnClickListener {
+        saveStatus(statusList)
+    }
+
+    private val updateButtonListener : View.OnClickListener = View.OnClickListener {
+        studentActivityViewModel.getAllStatus(cid).observe(this) { list ->
+            for (item in list) {
+                studentActivityViewModel.updateStatusOnline(item)
+            }
+        }
+    }
+
 
     private fun loadData() {
         adapter = StudentAdapter(this)
@@ -79,50 +125,60 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
 
         studentActivityViewModel.allStudentItems.observe(this) { studentItems ->
             studentList = studentItems
-            val statusList = ArrayList<Status>()
+            statusList = ArrayList()
             loadStatusList(studentItems, statusList)
 
             adapter.updateList(studentItems as ArrayList<Student>, statusList)
 
-            setToolBar(statusList)
+            setToolBar()
         }
     }
 
     private fun loadStatusList(studentItems: List<Student>, statusList: ArrayList<Status>) {
         for (studentItem in studentItems) {
-            statusList.add(Status(0,studentItem.sid,studentItem.cid,"",""))
+            statusList.add(Status(0, studentItem.sid, studentItem.cid, "", ""))
         }
     }
 
-    private fun setToolBar(statusList: ArrayList<Status>) {
+    private fun setToolBar() {
         subTitle = findViewById(R.id.subtitle_toolbar)
         val title: TextView = findViewById(R.id.title_toolbar)
         val back: ImageButton = findViewById(R.id.backButton)
-        val save: ImageButton = findViewById(R.id.iconSave)
+        saveIcon = findViewById(R.id.iconSave)
 
         title.text = className
-        subTitle.text = subName+" | "+calender.getDate()
+        subTitle.text = subName + " | " + calender.getDate()
 
-        save.setOnClickListener { saveStatus(statusList) }
         back.setOnClickListener { onBackPressed() }
+        saveIcon.setOnClickListener { saveStatus(statusList) }
 
         toolBar.setOnMenuItemClickListener { menuItem -> onMenuItemClick(menuItem) }
     }
 
-    private fun saveStatus(statusList: ArrayList<Status>) {
-        Toast.makeText(this,calender.getDate(),Toast.LENGTH_SHORT).show()
 
-        for (item in statusList) {
+    private fun saveStatus(statusList: ArrayList<Status>) {
+        Toast.makeText(this, calender.getDate(), Toast.LENGTH_SHORT).show()
+        for ((index, item) in statusList.withIndex()) {
             var status = item.status
             if (status != "P")
                 status = "A"
-            studentActivityViewModel.insertStatus(Status(0,item.sid,item.cid,status,calender.getDate()!!))
+            Log.d(TAG, "$item")
+            studentActivityViewModel.insertStatusOnline(
+                Status(
+                    0,
+                    item.sid,
+                    item.cid,
+                    status,
+                    calender.getDate()!!,
+                    ""
+                ),classMongoId, studentList[index].studentMongoId
+            )
         }
     }
 
-    private fun onMenuItemClick(menuItem: MenuItem?) : Boolean {
-        when(menuItem!!.itemId) {
-             R.id.add_student -> {
+    private fun onMenuItemClick(menuItem: MenuItem?): Boolean {
+        when (menuItem!!.itemId) {
+            R.id.add_student -> {
                 showAddStudentDialog()
             }
             R.id.show_calender -> {
@@ -137,25 +193,26 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
     }
 
     private fun openSheetListActivity() {
-        val intent = Intent(this,SheetListActivity::class.java)
-        intent.putExtra("className",className)
-        intent.putExtra("subName",subName)
-        intent.putExtra("cid",cid)
+        val intent = Intent(this, SheetListActivity::class.java)
+        intent.putExtra("className", className)
+        intent.putExtra("subName", subName)
+        intent.putExtra("cid", cid)
         startActivity(intent)
     }
 
     private fun showAddStudentDialog() {
-        dialog.show(supportFragmentManager,dialog.STUDENT_ADD_DIALOG)
+        dialog.show(supportFragmentManager, dialog.STUDENT_ADD_DIALOG)
     }
 
     private fun showCalender() {
-        calender.show(supportFragmentManager,"")
+        calender.show(supportFragmentManager, "")
     }
 
     override fun onCalenderClicked(year: Int, month: Int, day: Int) {
         calender.setDate(year, month, day)
-        subTitle.text = subName+" | "+calender.getDate()
-        Toast.makeText(this,calender.getDate(), Toast.LENGTH_SHORT).show()
+        subTitle.text = subName + " | " + calender.getDate()
+        Toast.makeText(this, calender.getDate(), Toast.LENGTH_SHORT).show()
+        changeSaveIcon()
     }
 
     override fun onStudentItemClicked(statusItem: Status) {
@@ -185,7 +242,7 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
 
     private fun showUpdateDialog(groupId: Int) {
         updatedStudent = studentList[groupId]
-        dialog.show(supportFragmentManager,dialog.STUDENT_UPDATE_DIALOG)
+        dialog.show(supportFragmentManager, dialog.STUDENT_UPDATE_DIALOG)
     }
 
     //Delete student data in database
@@ -202,16 +259,22 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
     // Add student in database
     override fun onAddClicked(text01: String, text02: String) {
 
-        val student = Student(0,cid,text01,text02.toInt())
+        val student = Student(0, cid, text01, text02.toInt())
 
         // Insert student in local database
-        studentActivityViewModel.insertStudentOnline(student,classMongoId)
+        studentActivityViewModel.insertStudentOnline(student, classMongoId)
     }
 
     //Update student data in database
     override fun onUpdateClicked(text01: String, text02: String) {
-        Log.d(TAG,"$position  $studentList")
-        val student = Student(studentList[position].sid,cid,text01,text02.toInt(),updatedStudent.studentMongoId)
+        Log.d(TAG, "$position  $studentList")
+        val student = Student(
+            studentList[position].sid,
+            cid,
+            text01,
+            text02.toInt(),
+            updatedStudent.studentMongoId
+        )
 
         //Update in local database
         studentActivityViewModel.updateStudent(student)

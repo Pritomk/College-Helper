@@ -24,4 +24,8 @@ class StatusRepository(private val statusDao: StatusDao) {
     fun getStatus(cid: Long, sid: Long, dateKey: String) : LiveData<String> {
         return statusDao.getStatus(cid, sid, dateKey)
     }
+
+    fun getDateStatus(cid: Long, dateKey: String) : LiveData<List<Status>> {
+        return statusDao.getDateStatus(cid,dateKey)
+    }
 }

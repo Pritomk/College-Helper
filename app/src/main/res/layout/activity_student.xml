@@ -7,8 +7,8 @@
     tools:context=".attendance.attendanceActivity.StudentActivity">
 
     <include
-        layout="@layout/toolbar_1"
-        android:id="@+id/toolbarStudent"/>
+        android:id="@+id/toolbarStudent"
+        layout="@layout/toolbar_1" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/studentRecycler"
