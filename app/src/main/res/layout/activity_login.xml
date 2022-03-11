@@ -78,6 +78,19 @@
                 android:layout_marginTop="50dp"/>
 
             <TextView
+                android:id="@+id/google_login"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/button_bg"
+                android:textAllCaps="false"
+                android:text="Google"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:layout_marginTop="50dp"/>
+
+            <TextView
                 android:id="@+id/create_account_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

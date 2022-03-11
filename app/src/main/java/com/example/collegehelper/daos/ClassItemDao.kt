@@ -18,4 +18,7 @@ interface ClassItemDao {
 
     @Query("Select * from class_table order by cid ASC")
     fun getAllClassItems() : LiveData<List<ClassItem>>
+
+    @Query("Select mongoId from class_table where cid = :cid")
+    fun getClassMongoId(cid: Long): LiveData<String>
 }

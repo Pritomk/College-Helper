@@ -38,6 +38,10 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
         repository.updateClassItem(classItem)
     }
 
+    fun getStudentMongoId(cid: Long) : LiveData<String> {
+        return repository.getClassMongoId(cid)
+    }
+
 
     //Online database methods
     @OptIn(DelicateCoroutinesApi::class)
