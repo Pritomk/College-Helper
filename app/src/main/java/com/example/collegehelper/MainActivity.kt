@@ -11,6 +11,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.collegehelper.authentication.LoginActivity
 import com.example.collegehelper.databinding.ActivityMainBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,8 +45,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val collegePref = getSharedPreferences("user_college_helper", MODE_PRIVATE)
-        if (!collegePref.contains("token")) {
+//        val collegePref = getSharedPreferences("user_college_helper", MODE_PRIVATE)
+//        if (!collegePref.contains("token")) {
+//            startActivity(Intent(this, LoginActivity::class.java))
+//            finish()
+//        }
+
+        val auth = Firebase.auth
+        if (auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }

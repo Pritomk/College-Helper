@@ -25,6 +25,8 @@ import com.example.collegehelper.room.status.Status
 import com.example.collegehelper.room.student.Student
 import com.example.collegehelper.ui.attendance.AttendanceViewModel
 import com.example.collegehelper.ui.attendance.AttendanceViewModelFactory
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Exception
@@ -335,10 +337,17 @@ class LoginActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val collegePref = getSharedPreferences("user_college_helper", MODE_PRIVATE)
-        if (collegePref.contains("token")) {
+//        val collegePref = getSharedPreferences("user_college_helper", MODE_PRIVATE)
+//        if (collegePref.contains("token")) {
+//            startActivity(Intent(this, MainActivity::class.java))
+//            finish()
+//        }
+
+        val auth = Firebase.auth
+        if (auth.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+
     }
 }
