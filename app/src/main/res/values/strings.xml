@@ -4,4 +4,11 @@
     <string name="title_assignment">Assignment</string>
     <string name="title_notes">Notes</string>
     <string name="title_setting">Setting</string>
+    <string name="default_web_client_id_gen" translatable="false">642837719770-ab5uugjvic09il5nh9347nl48mlddhqf.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId_gen" translatable="false">642837719770</string>
+    <string name="google_api_key_gen" translatable="false">AIzaSyBV-89WFXnZ6YvWMCLxHNG5jLrfwTb_3TY</string>
+    <string name="google_app_id_gen" translatable="false">1:642837719770:android:5a46ced7c7ae73c00313e3</string>
+    <string name="google_crash_reporting_api_key_gen" translatable="false">AIzaSyBV-89WFXnZ6YvWMCLxHNG5jLrfwTb_3TY</string>
+    <string name="google_storage_bucket_gen" translatable="false">collegehelper-8240a.appspot.com</string>
+    <string name="project_id_gen" translatable="false">collegehelper-8240a</string>
 </resources>

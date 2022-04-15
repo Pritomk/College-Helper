@@ -11,9 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.example.collegehelper.SharedPreferenceClass
 import com.example.collegehelper.attendance.attendanceActivity.AttendanceActivity
 import com.example.collegehelper.databinding.FragmentAttendanceBinding
@@ -21,7 +18,6 @@ import com.example.collegehelper.room.classItem.ClassItem
 import com.example.collegehelper.ui.dialog.AddButtonClicked
 import com.example.collegehelper.ui.dialog.MyDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONObject
 
 class AttendanceFragment : Fragment(), AddButtonClicked, ClassItemClicked {
 

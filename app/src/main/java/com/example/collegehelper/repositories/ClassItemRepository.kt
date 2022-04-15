@@ -1,5 +1,6 @@
 package com.example.collegehelper.repositories
 
+import androidx.lifecycle.LiveData
 import com.example.collegehelper.daos.ClassItemDao
 import com.example.collegehelper.room.classItem.ClassItem
 
@@ -17,5 +18,9 @@ class ClassItemRepository(private val classItemDao: ClassItemDao) {
 
     suspend fun deleteClassItem(classItem: ClassItem) {
         classItemDao.delete(classItem)
+    }
+
+    fun getClassMongoId(cid: Long): LiveData<String> {
+        return classItemDao.getClassMongoId(cid)
     }
 }
