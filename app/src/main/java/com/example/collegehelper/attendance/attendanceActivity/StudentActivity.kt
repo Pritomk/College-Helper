@@ -75,45 +75,18 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
         )[StudentActivityViewModel::class.java]
 
 
+        setToolBar()
+
         loadData()
 
-        changeSaveIcon()
-//        saveIcon.setOnClickListener { saveButtonListener }
+
+
     }
 
-    private fun changeSaveIcon() {
-        calender.getDate()?.let {
-            studentActivityViewModel.getDateStatus(cid, it).observe(this) { list ->
-                val icon = toolBar.findViewById<ImageView>(R.id.iconSave)
-                Log.d(TAG, "Executed")
-                if (list.isNotEmpty()) {
-                    icon.setImageResource(R.drawable.ic_update_attendance)
-                    saveIcon.setOnClickListener {
-                        studentActivityViewModel.getAllStatus(cid).observe(this) { list ->
-                            for (item in list) {
-                                studentActivityViewModel.updateStatusOnline(item)
-                            }
-                        }
-                    }
-                } else {
-                    icon.setImageResource(R.drawable.save_image)
-                    saveIcon.setOnClickListener {
-                        saveStatus(statusList)
-                    }
-                }
-            }
-        }
-    }
-
-    private val saveButtonListener: View.OnClickListener = View.OnClickListener {
-        saveStatus(statusList)
-    }
-
-    private val updateButtonListener : View.OnClickListener = View.OnClickListener {
-        studentActivityViewModel.getAllStatus(cid).observe(this) { list ->
-            for (item in list) {
-                studentActivityViewModel.updateStatusOnline(item)
-            }
+    private fun saveStatus(statusList: ArrayList<Status>) {
+        Toast.makeText(this, calender.getDate(), Toast.LENGTH_SHORT).show()
+        for (item in statusList) {
+            studentActivityViewModel.insertStatus(item)
         }
     }
 
@@ -129,14 +102,12 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
             loadStatusList(studentItems, statusList)
 
             adapter.updateList(studentItems as ArrayList<Student>, statusList)
-
-            setToolBar()
         }
     }
 
     private fun loadStatusList(studentItems: List<Student>, statusList: ArrayList<Status>) {
         for (studentItem in studentItems) {
-            statusList.add(Status(0, studentItem.sid, studentItem.cid, "", ""))
+            statusList.add(Status(0, studentItem.sid, studentItem.cid, "", calender.getDate()!!))
         }
     }
 
@@ -156,25 +127,7 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
     }
 
 
-    private fun saveStatus(statusList: ArrayList<Status>) {
-        Toast.makeText(this, calender.getDate(), Toast.LENGTH_SHORT).show()
-        for ((index, item) in statusList.withIndex()) {
-            var status = item.status
-            if (status != "P")
-                status = "A"
-            Log.d(TAG, "$item")
-            studentActivityViewModel.insertStatusOnline(
-                Status(
-                    0,
-                    item.sid,
-                    item.cid,
-                    status,
-                    calender.getDate()!!,
-                    ""
-                ),classMongoId, studentList[index].studentMongoId
-            )
-        }
-    }
+
 
     private fun onMenuItemClick(menuItem: MenuItem?): Boolean {
         when (menuItem!!.itemId) {
@@ -212,7 +165,7 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
         calender.setDate(year, month, day)
         subTitle.text = subName + " | " + calender.getDate()
         Toast.makeText(this, calender.getDate(), Toast.LENGTH_SHORT).show()
-        changeSaveIcon()
+        adapter.notifyDataSetChanged()
     }
 
     override fun onStudentItemClicked(statusItem: Status) {
@@ -262,7 +215,9 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
         val student = Student(0, cid, text01, text02.toInt())
 
         // Insert student in local database
-        studentActivityViewModel.insertStudentOnline(student, classMongoId)
+        studentActivityViewModel.insertStudent(student)
+
+//        studentActivityViewModel.insertStudentOnline(student, classMongoId)
     }
 
     //Update student data in database
@@ -273,7 +228,6 @@ class StudentActivity : AppCompatActivity(), OnCalenderClickListener, StudentIte
             cid,
             text01,
             text02.toInt(),
-            updatedStudent.studentMongoId
         )
 
         //Update in local database

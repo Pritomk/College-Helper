@@ -56,59 +56,8 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         regBtn.setOnClickListener {
-            regFunc()
+
         }
     }
 
-    private fun regFunc() {
-        progressBar.visibility = View.VISIBLE
-        val username = nameText.text.toString()
-        val email = emailText.text.toString()
-        val password = passText.text.toString()
-
-        val url = "https://collegehelperapi.herokuapp.com/api/user/auth/register"
-
-        val map = HashMap<String, String>()
-        map["username"] = username
-        map["email"] = email
-        map["password"] = password
-
-        val jsonObjectRequest = object : JsonObjectRequest(Method.POST, url, JSONObject(map as Map<*, *>), { response ->
-            try {
-                if (response.getBoolean("success")) {
-                    val token = response.getString("token")
-                    sharedPreferenceClass.setValueString("token", token)
-                    startActivity(Intent(this, MainActivity::class.java))
-                    progressBar.visibility = View.GONE
-                }
-            } catch (e: JSONException) {
-                progressBar.visibility = View.GONE
-                e.printStackTrace()
-            }
-        },{ error ->
-            val response = error.networkResponse
-            if (error != null && error is ServerError) {
-                try {
-                    val res = String(response.data)
-                    val obj = JSONObject(res)
-                    Toast.makeText(this, "Error is ${obj.getString("msg")}", Toast.LENGTH_SHORT).show()
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }
-            progressBar.visibility = View.GONE
-        }) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val params = HashMap<String, String>()
-                params["Content-Type"] = "application/json"
-                return params
-            }
-        }
-
-        val policy = DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-        jsonObjectRequest.retryPolicy = policy
-
-        val requestQueue = Volley.newRequestQueue(this)
-        requestQueue.add(jsonObjectRequest)
-    }
 }

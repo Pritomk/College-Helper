@@ -29,14 +29,20 @@
             android:layout_height="wrap_content"
             android:hint="edt01"
             android:layout_margin="8dp"
-            android:id="@+id/edt01"/>
+            android:id="@+id/edt01"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"
+            android:backgroundTint="@color/grey"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="edt02"
             android:layout_margin="8dp"
-            android:id="@+id/edt02"/>
+            android:id="@+id/edt02"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"
+            android:backgroundTint="@color/grey"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

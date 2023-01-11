@@ -27,62 +27,8 @@ class StatusDao(val application: Application) {
     }
 
     fun insertStatusOnline(status: Status,classMongoId: String, studentMongoId: String) {
-        val url = "https://collegehelperapi.herokuapp.com/api/user/status"
-
-        val map = HashMap<String, String>()
-        map["status"] = status.status
-        map["date"] = status.dateKey
-        map["classId"] = classMongoId
-        map["studentId"] = studentMongoId
-
-        val jsonObjectRequest : JsonObjectRequest = object : JsonObjectRequest(Method.POST, url, JSONObject(
-            map as Map<*, *>
-        ), { response ->
-            Log.d(TAG, "$response")
-            status.statusMongoId = response.getJSONObject("status").getString("_id")
-            GlobalScope.launch {
-                statusRepository.insert(status)
-            }
-        }, { error ->
-            Log.e(TAG, "$error : ${error.message}")
-        }) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val params = HashMap<String, String>()
-                params["Content-Type"] = "application/json"
-                params["Authorization"] = "$token"
-                return params
-            }
-        }
-
-        jsonObjectRequest.retryPolicy = DefaultRetryPolicy(3000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-
-        requestQueue.add(jsonObjectRequest)
     }
 
     fun updateStatusOnline(status : Status) {
-        val url = "https://collegehelperapi.herokuapp.com/api/user/status/${status.statusMongoId}"
-
-        val map = HashMap<String, String>()
-        map["status"] = status.status
-
-        val jsonObjectRequest = object : JsonObjectRequest(Method.PUT, url, JSONObject(map as Map<*, *>), { response ->
-            if (response.getBoolean("success")) {
-                Log.d(TAG, "$response")
-            }
-        },{ error ->
-            Log.e(TAG, "$error : ${error.message}")
-        }) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val params = HashMap<String, String>()
-                params["Content-Type"] = "application/json"
-                params["Authorization"] = "$token"
-                return params
-            }
-        }
-
-        jsonObjectRequest.retryPolicy = DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-
-        requestQueue.add(jsonObjectRequest)
     }
 }

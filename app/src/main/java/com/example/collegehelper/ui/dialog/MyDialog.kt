@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -65,6 +66,7 @@ class MyDialog(private val listener: AddButtonClicked) : DialogFragment() {
         title.text = "Add new Student"
         val nameEdit: EditText = dialogBinding.edt01
         val rollEdit: EditText = dialogBinding.edt02
+        rollEdit.inputType = InputType.TYPE_CLASS_NUMBER
         nameEdit.hint = "Enter Student Name"
         rollEdit.hint = "Enter Roll"
         val addBtn: Button = dialogBinding.addBtn

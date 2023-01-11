@@ -2,6 +2,7 @@ package com.example.collegehelper.ui.attendance
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.collegehelper.firebaseDao.OnlineClassDao
 import com.example.collegehelper.repositories.ClassItemRepository
 import com.example.collegehelper.room.classItem.ClassItem
 import com.example.collegehelper.room.classItem.ClassItemDatabase
@@ -15,11 +16,11 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
 
     private val repository : ClassItemRepository
     val allClassItems : LiveData<List<ClassItem>>
-    private val classDao: ClassDao
+    private val classDao: OnlineClassDao
 
     init {
         val dao = ClassItemDatabase.getDatabase(application).getClassItemDao()
-        classDao = ClassDao(application)
+        classDao = OnlineClassDao()
         repository = ClassItemRepository(dao)
         allClassItems = repository.allClassItems
     }
@@ -38,30 +39,28 @@ class AttendanceViewModel(application: Application) : AndroidViewModel(applicati
         repository.updateClassItem(classItem)
     }
 
-    fun getStudentMongoId(cid: Long) : LiveData<String> {
-        return repository.getClassMongoId(cid)
-    }
 
 
     //Online database methods
     @OptIn(DelicateCoroutinesApi::class)
     fun insertClassOnline(className: String, subName: String){
         GlobalScope.launch {
-            classDao.insertClass(className, subName)
+//            classDao.insertClass(className, subName)
+            classDao.insertClassOnline(className,subName)
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun updateClassOnline(className: String, subName: String, mongoId: String) {
         GlobalScope.launch {
-            classDao.updateClass(className, subName,mongoId)
+//            classDao.updateClass(className, subName,mongoId)
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun deleteClassOnline(mongoId: String) {
         GlobalScope.launch {
-            classDao.deleteClassItem(mongoId)
+//            classDao.deleteClassItem(mongoId)
         }
     }
 }

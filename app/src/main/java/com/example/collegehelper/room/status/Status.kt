@@ -1,6 +1,7 @@
 package com.example.collegehelper.room.status
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
@@ -12,5 +13,4 @@ data class Status(
     var cid: Long = 0L,
     var status: String = "",
     var dateKey: String = "",
-    var statusMongoId: String = ""
 )

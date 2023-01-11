@@ -20,7 +20,4 @@ class ClassItemRepository(private val classItemDao: ClassItemDao) {
         classItemDao.delete(classItem)
     }
 
-    fun getClassMongoId(cid: Long): LiveData<String> {
-        return classItemDao.getClassMongoId(cid)
-    }
 }

@@ -72,7 +72,7 @@ class AttendanceFragment : Fragment(), AddButtonClicked, ClassItemClicked {
             classItemList = it as ArrayList<ClassItem>
             classAdapter.updateClassItems(it)
         }
-}
+    }
 
     private fun setupDialog() {
         dialog.show(requireFragmentManager(),dialog.CLASS_ADD_DIALOG)
@@ -84,8 +84,9 @@ class AttendanceFragment : Fragment(), AddButtonClicked, ClassItemClicked {
     }
 
     override fun onAddClicked(text01: String, text02: String) {
-        //Insert data to mongodb
-        attendanceViewModel.insertClassOnline(text01,text02)
+
+        //Insert data to local
+        attendanceViewModel.insertClassItem(ClassItem(0,text01,text02))
     }
 
 
@@ -96,18 +97,11 @@ class AttendanceFragment : Fragment(), AddButtonClicked, ClassItemClicked {
 
         //Update data in local database
         attendanceViewModel.updateClassItem(updateClassItem)
-
-        //Update in online database
-        attendanceViewModel.updateClassOnline(text01, text02, updateClassItem.mongoId)
-
     }
 
     override fun onDeleteClicked() {
         //Delete in local database
         attendanceViewModel.deleteClassItem(deleteClassItem)
-
-        //Delete in online database
-        attendanceViewModel.deleteClassOnline(deleteClassItem.mongoId)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -137,8 +131,6 @@ class AttendanceFragment : Fragment(), AddButtonClicked, ClassItemClicked {
         intent.putExtra("className",item.className)
         intent.putExtra("subjectName",item.subjectName)
         intent.putExtra("cid",item.cid)
-        Log.d(TAG, "${item.mongoId}")
-        intent.putExtra("classMongoId", item.mongoId)
         startActivity(intent)
     }
 }
